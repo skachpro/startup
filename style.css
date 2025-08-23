@@ -890,8 +890,8 @@ h1 {
 
 .about-us-scroll-box {
     position: relative;
-    width: 100%;
-    max-width: 1140px;
+    /* width: 100%; */
+    /* max-width: 1140px; */
 }
 
 .scroll-btn {
