@@ -203,7 +203,7 @@ window.onload = function (loadEvent) {
         element.style.backgroundPosition = `calc(50% + ${(event.clientX * 0.1).toFixed()}px) calc(50% + ${(event.clientY * 0.1).toFixed()}px)`
     }
 
-    fetch("../js/products.json")
+    fetch("js/products.json")
         .then(response => response.json())
         .then(res => {
             createLatestWorksCards(res)
