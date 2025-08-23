@@ -55,6 +55,10 @@ window.onload = function (loadEvent) {
         sliderCards,
         elementsWithAnimation = [...document.querySelectorAll(".animation")]
 
+    getStartedBtn.addEventListener("click", () => {
+        
+    })
+
     let leftArray = []
     for (let i = 0; i < 4; i++) {
         let figure = document.createElement("figure"),
