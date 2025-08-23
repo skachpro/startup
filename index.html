@@ -54,7 +54,7 @@
         <section class="section hero-section wrapper">
             <h1>Welcome to STARTUP</h1>
             <p class="hero-subtitle">Your Favourite Creative Agency Template</p>
-            <button class="bg-trans-btn"><span>Get Started</span></button>
+            <button  class="bg-trans-btn"><span>Get Started</span></button>
         </section>
     </header>
     <main class="main">
@@ -118,7 +118,7 @@
                 <hr class="section-line">
                 <nav class="latest-works-nav">
                     <ul class="latest-works-categories">
-                        <li class="latest-works-categories-item latest-works-categories-item-active">All</li>
+                        <li class="latest-works-categories-item">All</li>
                         <li class="latest-works-categories-item">Branding</li>
                         <li class="latest-works-categories-item">Design</li>
                         <li class="latest-works-categories-item">Development</li>
@@ -134,7 +134,7 @@
         <section class="section cta parallax">
             <h2 class="cta-title wrapper animation anim-left">Do you like OUR WORK so far?
                 Let's talk about YOUR PROJECT!</h2>
-            <button class="bg-trans-btn animation anim-right">Get in Touch</button>
+            <a href="#getInTouch" class="bg-trans-btn animation anim-right">Get in Touch</a>
         </section>
         <section class="section blog">
             <div class="section-title animation anim-top">
@@ -203,13 +203,16 @@
                 <div class="box read-more-box dn">
                     <div class="popup-bg close"></div>
                     <div class="read-more-content">
+                        <div class="read-more-close-btn close">
+
+                        </div>
                     </div>
                 </div>
 
             </div>
         </section>
         <section class="section clients">
-            <div class="clients-logos">
+            <div class="clients-logos wrapper">
                 <img class="client-logo" alt="" src="images/deorham.webp">
                 <img src="images/ratings.webp" alt="" class="client-logo">
                 <img src="images/malik-media.webp" alt="" class="client-logo">
@@ -231,7 +234,7 @@
                 <span class="dot"></span>
             </div>
         </section>
-        <section class="section getInTouch wrapper">
+        <section class="section getInTouch wrapper" id="getInTouch">
             <div class="section-title animation anim-top">
                 <h2 class="section-name">Get in touch</h2>
                 <hr class="section-line">
@@ -270,7 +273,7 @@
                         </div>
                     </div>
                 </div>
-                <form class="form animation anim-right" method="POST" action="thanks.php" name="form">
+                <form class="form animation anim-right" method="POST" action="thanks.php" name="form" id="form">
                     <input type="text" name="person-name" class="input user-info" placeholder="Your Name"
                         maxlength="50">
                     <input type="email" name="e-mail" class="input user-info" placeholder="Your E-mail" maxlength="50">
@@ -291,10 +294,10 @@
     <footer class="footer animation anim-bottom">
         <div class="section-title">
             <div class="footer-icons">
-                <span class="footer-icon"></span>
-                <span class="footer-icon"></span>
-                <span class="footer-icon"></span>
-                <span class="footer-icon"></span>
+                <a href="#" class="footer-icon"></a>
+                <a href="#" class="footer-icon"></a>
+                <a href="#" class="footer-icon"></a>
+                <a href="#" class="footer-icon"></a>
             </div>
             <hr class="section-line">
             <p class="section-subtitle">&copy; 2015 Startup, Designed by ShapedTheme</p>

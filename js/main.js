@@ -5,7 +5,7 @@ window.onload = function (loadEvent) {
         aboutUsScroll = document.querySelector(".about-us-scroll"),
         scrollBtn = [...document.querySelectorAll(".scroll-btn")],
         elemsWithParallax = [...document.querySelectorAll(".parallax")],
-        bgTransparentButtons = [...document.querySelectorAll(".bg-trans-btn")],
+        getStartedBtn = document.querySelector(".bg-trans-btn"),
         servicesItemsBox = document.querySelector(".services-items"),
         servicesItemTitle = [...document.querySelectorAll(".services-item-title")],
         readMoreBtns = [...document.querySelectorAll(".read-more")],
@@ -206,7 +206,21 @@ window.onload = function (loadEvent) {
     fetch("js/products.json")
         .then(response => response.json())
         .then(res => {
-            createLatestWorksCards(res)
+            if (localStorage.category === undefined) {
+                localStorage.setItem("category", JSON.stringify(res))
+            }
+
+            if (localStorage.categoryName === undefined) {
+                localStorage.setItem("categoryName", "All")
+            }
+            let categoryBtns = [...document.querySelectorAll(".latest-works-categories-item")]
+            categoryBtns.forEach(btn => {
+                if (btn.textContent === localStorage.categoryName) {
+                    btn.classList.add("latest-works-categories-item-active")
+                }
+            })
+            console.log(localStorage.category)
+            createLatestWorksCards(localStorage.category !== undefined ? JSON.parse(localStorage.category) : res)
             latestWorksBtns.forEach(btn => {
                 btn.addEventListener("click", () => {
                     let wantedDatas = []
@@ -219,6 +233,8 @@ window.onload = function (loadEvent) {
                             wantedDatas.push(data)
                         }
                     })
+                    localStorage.category = JSON.stringify(wantedDatas)
+                    localStorage.categoryName = btn.textContent
                     createLatestWorksCards(wantedDatas)
                     let oldPressedBtns = [...document.querySelectorAll(".latest-works-categories-item.latest-works-categories-item-active")]
                     oldPressedBtns.forEach(activeBtn => {
@@ -324,9 +340,11 @@ window.onload = function (loadEvent) {
             readMoreBtns.forEach((btn) => {
                 btn.addEventListener("click", () => {
                     document.querySelector(".read-more-box").classList.remove("dn")
-                    document.querySelector(".read-more-content").innerHTML = `<p class="text post-paragraph">
-                    ${btn.closest(".post").querySelector(".text").innerText}
-                    </p>`
+                    let p = document.createElement("p"),
+                        text = btn.closest(".post").querySelector(".text").innerText
+                    p.classList.add("text", "post-paragraph")
+                    p.textContent = text + "\n\n" +  text
+                    document.querySelector(".read-more-content").append(p)
                 })
             })
 

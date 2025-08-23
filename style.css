@@ -13,6 +13,11 @@ body {
     font-family: "Montserrat";
 }
 
+html,
+body {
+    scroll-behavior: smooth;
+}
+
 hr {
     border: none;
 }
@@ -152,12 +157,15 @@ h1 {
     background: transparent;
     font-size: 16rem;
     text-transform: uppercase;
+    text-decoration: none;
+    font-weight: 500;
     color: #fff;
     border-radius: 2px;
     border: 2px solid #ffffff;
     line-height: .7;
     padding: 17px 33px;
     transition-duration: .3s;
+    cursor: pointer;
 }
 
 .bg-trans-btn span {
@@ -600,9 +608,9 @@ h1 {
 }
 
 .read-more-box {
-    display: flex;
+    /* display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: center; */
     position: fixed;
     left: 0;
     top: 0;
@@ -624,8 +632,9 @@ h1 {
 .read-more-content {
     position: relative;
     background-color: #fff;
-    padding: 100px 50px;
-    width: 60%;
+    /* padding: 100px 50px; */
+    padding: 50px 20px;
+    width: 100%;
     margin: auto;
     border-radius: 15px;
 }
@@ -642,6 +651,35 @@ h1 {
     height: 50px;
     background-color: #555;
     cursor: pointer;
+
+}
+.read-more-close-btn {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    background: transparent;
+}
+
+.read-more-close-btn::before,
+.read-more-close-btn::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 2px;
+    background-color: #000;
+}
+
+.read-more-close-btn::before {
+    height: 100%;
+    transform: rotate(45deg) translateX(-50%);
+}
+.read-more-close-btn::after {
+    height: 100%;
+    transform: rotate(-45deg) translateX(-50%);
 }
 
 .read-more-box .post-img {
@@ -879,7 +917,7 @@ h1 {
 .about-us-scroll {
     /* display: flex; */
     position: relative;
-    overflow-x: hidden;
+    overflow: hidden;
     margin: auto;
     height: 328px;
 }
@@ -954,7 +992,7 @@ h1 {
     z-index: 2;
     cursor: default;
     width: 100%;
-    /* transition: left .3s; */
+    transition: all 1s, left .3s;
 }
 
 .scroll-card-full-block {
@@ -1006,6 +1044,7 @@ h1 {
     background-size: 200%;
     background-position: 0 0;
     transform: rotate(90deg);
+    transition-duration: .3s;
 }
 
 
@@ -1070,13 +1109,35 @@ h1 {
         justify-content: center;
     }
 
-    .scroll-card {
+    /* .scroll-card {
         width: 263px;
+    } */
+    
+    .read-more-content {
+        width: 80%;
+        
     }
 }
 
 @media (min-width: 667px) {
-    
+    .scroll-card {
+        width: 263px;
+    }
+
+    .read-more-close-btn {
+        right: 30px;
+        top: 30px;
+    }
+
+    .read-more-content {
+        padding: 100px 30px;
+    }
+
+    .read-more-box {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
 }
 
 @media (min-width: 768px) {
@@ -1111,17 +1172,20 @@ h1 {
         flex-direction: row;
     }
 
-    .burger-btn {
-        display: none;
+    
+    
+    .latest-works-cards {
+        grid-template-columns: .5fr .5fr;
+        
     }
+}
 
+@media (min-width: 800px) {
     .header-nav {
         display: block;
     }
-
-    .latest-works-cards {
-        grid-template-columns: .5fr .5fr;
-
+    .burger-btn {
+        display: none;
     }
 }
 
