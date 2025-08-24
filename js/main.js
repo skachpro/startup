@@ -55,7 +55,7 @@ window.onload = function (loadEvent) {
         sliderCards,
         elementsWithAnimation = [...document.querySelectorAll(".animation")]
 
-    // localStorage.isLoged = "false"
+    localStorage.isLoged = "false"
 
     if (localStorage.isLoged === undefined || localStorage.isLoged === "false") {
         getStartedBtn.addEventListener("click", () => {
