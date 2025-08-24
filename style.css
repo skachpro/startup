@@ -125,10 +125,6 @@ header.header {
     cursor: pointer;
 }
 
-.burger-btn-click {
-    /* position: fixed;
-    top: 40px; */
-}
 
 .hero-section {
     position: absolute;
@@ -176,7 +172,6 @@ h1 {
     font-family: "Montserrat";
 }
 
-.bg-trans-btn span:hover {}
 
 .bg-trans-btn:hover {
     background-color: rgba(255, 255, 255, 0.5);
@@ -304,14 +299,6 @@ h1 {
 
 #box1 {
     border-radius: 25px 25px 0 0;
-}
-
-#box2 {
-    /* border-radius: 0 25px 0 0; */
-}
-
-#box3 {
-    /* border-radius: 0 0 0 25px; */
 }
 
 #box4 {

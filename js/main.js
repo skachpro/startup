@@ -53,7 +53,8 @@ window.onload = function (loadEvent) {
         latestWorksBtns = [...document.querySelectorAll(".latest-works-categories-item")],
         gap,
         sliderCards,
-        elementsWithAnimation = [...document.querySelectorAll(".animation")]
+        elementsWithAnimation = [...document.querySelectorAll(".animation")],
+        headerNavLinks = [...document.querySelectorAll(".nav-link")]
 
     localStorage.isLoged = "false"
 
@@ -89,6 +90,8 @@ window.onload = function (loadEvent) {
                     rightArr = [1, 2, 3, 4],
                     rects = [...document.querySelectorAll(".box-num")],
                     correct = true
+                
+                
                 rects.forEach((rect, i) => {
                     if (+rect.dataset.num !== rightArr[i]) {
                         correct = false
@@ -159,6 +162,8 @@ window.onload = function (loadEvent) {
     } else {
         getStartedBtn.classList.add("dn")
     }
+
+
 
 
     let leftArray = []
@@ -294,6 +299,15 @@ window.onload = function (loadEvent) {
         burgerBtn.style.zIndex = "1"
         burgerBtn.classList.toggle("burger-btn-click")
         body.classList.toggle("oh")
+
+        headerNavLinks.forEach(link => {
+            link.onclick = () => {
+                nav.classList.remove("db")
+                nav.classList.remove("nav-mobile")
+                burgerBtn.classList.remove("burger-btn-click")
+                body.classList.remove("oh")
+            }
+        })
     }
 
     scrlCards.forEach((scrollCard) => {
