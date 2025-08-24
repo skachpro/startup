@@ -55,9 +55,111 @@ window.onload = function (loadEvent) {
         sliderCards,
         elementsWithAnimation = [...document.querySelectorAll(".animation")]
 
-    getStartedBtn.addEventListener("click", () => {
-        
-    })
+    // localStorage.isLoged = "false"
+
+    if (localStorage.isLoged === undefined || localStorage.isLoged === "false") {
+        getStartedBtn.addEventListener("click", () => {
+            let arr = [1, 2, 3, 4]
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1))
+                    ;[arr[i], arr[j]] = [arr[j], arr[i]]
+            }
+            console.log(arr)
+
+            let dropZones = [...document.querySelectorAll(".box")]
+            dropZones.forEach((zone, i) => {
+                let span = document.createElement("span")
+                span.classList.add("box-num")
+                span.draggable = "true"
+                span.dataset.num = arr[i]
+                span.textContent = arr[i]
+
+                zone.append(span)
+            })
+
+            let answerBtn = document.querySelector(".answer"),
+                captcha = document.querySelector(".log-in-pop-up")
+
+            captchaFunc (captcha, dropZones, answerBtn)
+
+            answerBtn.addEventListener("click", () => {
+                if (answerBtn.classList.contains("answer-disabled")) return
+
+                let answersArr = [],
+                    rightArr = [1, 2, 3, 4],
+                    rects = [...document.querySelectorAll(".box-num")],
+                    correct = true
+                rects.forEach((rect, i) => {
+                    if (+rect.dataset.num !== rightArr[i]) {
+                        correct = false
+                        return
+                    }
+                })
+
+                if (correct) {
+                    alert("You are the Human")
+                    localStorage.setItem("isLoged", "true")
+                    captcha.classList.add("dn")
+                } else {
+                    alert("Incorrect")
+                    localStorage.setItem("isLoged", "false")
+                }
+
+            })
+
+            function captchaFunc(captcha, dropZones, answerBtn) {
+                let rects = [...document.querySelectorAll(".box-num")],
+                    movedItem
+    
+                captcha.classList.remove("dn")
+    
+                dropZones.forEach(zone => {
+                    console.log(zone)
+                    zone.addEventListener("dragover", dragOver.bind(null, zone))
+    
+                    zone.addEventListener("drop", dropAct.bind(null, zone))
+                })
+    
+                rects.forEach(rect => {
+                    rect.addEventListener("dragstart", dragStart.bind(null, rect))
+                    rect.addEventListener("dragend", dragEnd.bind(null, rect))
+                })
+    
+                function dragStart(rect, dragStartEvent) {
+                    console.log(rect)
+                    setTimeout(() => {
+                        movedItem = dragStartEvent.target
+                        movedItem.classList.add("dn")
+                    }, 0)
+                }
+    
+                function dragOver(zone, dragOverEvent) {
+                    dragOverEvent.preventDefault()
+                }
+    
+                function dropAct(zone, dropEvent) {
+                    if (dropEvent.target.parentElement) {
+                        movedItem.parentElement.append(dropEvent.target)
+                        zone.append(movedItem)
+                        if (answerBtn.classList.contains("answer-disabled")) {
+                            answerBtn.classList.remove("answer-disabled")
+                        }
+                    }
+                }
+    
+                function dragEnd(rect, dragEndEvent) {
+                    movedItem.classList.remove("dn")
+                }
+    
+            }
+        })
+
+
+
+    } else {
+        getStartedBtn.classList.add("dn")
+    }
+
 
     let leftArray = []
     for (let i = 0; i < 4; i++) {
@@ -223,7 +325,7 @@ window.onload = function (loadEvent) {
                     btn.classList.add("latest-works-categories-item-active")
                 }
             })
-            console.log(localStorage.category)
+            // console.log(localStorage.category)
             createLatestWorksCards(localStorage.category !== undefined ? JSON.parse(localStorage.category) : res)
             latestWorksBtns.forEach(btn => {
                 btn.addEventListener("click", () => {
@@ -301,7 +403,6 @@ window.onload = function (loadEvent) {
                     }
                     window.removeEventListener("mousemove", handler)
                 })
-
                 element.addEventListener("mouseenter", () => {
                     element.addEventListener("mousemove", parallax.bind(null, element))
                 })
@@ -347,7 +448,7 @@ window.onload = function (loadEvent) {
                     let p = document.createElement("p"),
                         text = btn.closest(".post").querySelector(".text").innerText
                     p.classList.add("text", "post-paragraph")
-                    p.textContent = text + "\n\n" +  text
+                    p.textContent = text + "\n\n" + text
                     document.querySelector(".read-more-content").append(p)
                 })
             })
@@ -355,7 +456,7 @@ window.onload = function (loadEvent) {
 
             close.forEach((close) => {
                 close.addEventListener("click", () => {
-                    close.closest(".box").classList.add("dn")
+                    close.closest(".parent").classList.add("dn")
                 })
             })
 
@@ -391,7 +492,7 @@ window.onload = function (loadEvent) {
                     removeAnim(element)
                 }
             }
-            console.log(distsanceToAnimatedElemArray)
+            // console.log(distsanceToAnimatedElemArray)
 
             window.onscroll = (e) => {
                 let zoneBottomBorder = window.scrollY + window.innerHeight
