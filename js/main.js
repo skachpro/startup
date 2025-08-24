@@ -81,7 +81,7 @@ window.onload = function (loadEvent) {
             let answerBtn = document.querySelector(".answer"),
                 captcha = document.querySelector(".log-in-pop-up")
 
-            captchaFunc (captcha, dropZones, answerBtn)
+            captchaFunc(captcha, dropZones, answerBtn)
 
             answerBtn.addEventListener("click", () => {
                 if (answerBtn.classList.contains("answer-disabled")) return
@@ -90,8 +90,8 @@ window.onload = function (loadEvent) {
                     rightArr = [1, 2, 3, 4],
                     rects = [...document.querySelectorAll(".box-num")],
                     correct = true
-                
-                
+
+
                 rects.forEach((rect, i) => {
                     if (+rect.dataset.num !== rightArr[i]) {
                         correct = false
@@ -103,6 +103,7 @@ window.onload = function (loadEvent) {
                     alert("You are the Human")
                     localStorage.setItem("isLoged", "true")
                     captcha.classList.add("dn")
+                    body.classList.remove("oh")
                 } else {
                     alert("Incorrect")
                     localStorage.setItem("isLoged", "false")
@@ -113,21 +114,77 @@ window.onload = function (loadEvent) {
             function captchaFunc(captcha, dropZones, answerBtn) {
                 let rects = [...document.querySelectorAll(".box-num")],
                     movedItem
-    
+                body.classList.add("oh")
                 captcha.classList.remove("dn")
-    
+
                 dropZones.forEach(zone => {
                     console.log(zone)
                     zone.addEventListener("dragover", dragOver.bind(null, zone))
-    
                     zone.addEventListener("drop", dropAct.bind(null, zone))
                 })
-    
                 rects.forEach(rect => {
                     rect.addEventListener("dragstart", dragStart.bind(null, rect))
                     rect.addEventListener("dragend", dragEnd.bind(null, rect))
+
+                    rect.addEventListener("touchstart", (e) => {
+                        movedItem = rect
+                        startCord = {
+                            top: Math.abs(e.touches[0].pageY - rect.getBoundingClientRect().top),
+                            left: Math.abs(e.touches[0].pageX - rect.getBoundingClientRect().left)
+                        }
+                        rect.addEventListener("touchmove", (touchMoveEvent) => {
+                            console.log(touchMoveEvent)
+                            rect.style.width = getComputedStyle(rect).width
+                            rect.style.height = getComputedStyle(rect).height
+                            rect.parentElement.style.position = "static"
+                            moveHandler(touchMoveEvent)
+                        })
+
+                        function moveHandler(event) {
+                            move(rect, startCord, event)
+                        }
+                        function move(rect, startCord, event) {
+                            rect.style.transform = "none"
+                            rect.style.top = `${event.touches[0].pageY - startCord.top}px`
+                            rect.style.left = `${event.touches[0].pageX - startCord.left}px`
+                        }
+
+                        rect.addEventListener("touchend", touchEndEvent => {
+                            dropZones.forEach(zone => {
+                                let rectPos = rect.getBoundingClientRect(),
+                                    zonePos = zone.getBoundingClientRect(),
+                                    rectParent = rect.parentElement
+
+                                if (
+                                    rectPos.left >= zonePos.left && 
+                                    rectPos.right <= zonePos.right &&
+                                    rectPos.top >= zonePos.top &&
+                                    rectPos.bottom <= zonePos.bottom
+                                ) {
+                                    zone.style.position = "relative"
+                                    rect.style.top = "50%"
+                                    rect.style.left = "50%"
+                                    rect.style.transform = `translate(-50%, -50%)`
+                                    if (zone.querySelector(".box-num")) {
+                                        rectParent.style.position = "relative"
+                                        rectParent.append(zone.querySelector(".box-num"))
+                                        if (answerBtn.classList.contains("answer-disabled")) {
+                                            answerBtn.classList.remove("answer-disabled")
+                                        }
+                                    }
+                                    zone.append(rect)
+                                }
+                            })
+                            rect.parentElement.style.position = "relative"
+                            rect.style.top = "50%"
+                            rect.style.left = "50%"
+                            rect.style.transform = `translate(-50%, -50%)`
+                        })
+
+                    })
+
                 })
-    
+
                 function dragStart(rect, dragStartEvent) {
                     console.log(rect)
                     setTimeout(() => {
@@ -135,11 +192,11 @@ window.onload = function (loadEvent) {
                         movedItem.classList.add("dn")
                     }, 0)
                 }
-    
+
                 function dragOver(zone, dragOverEvent) {
                     dragOverEvent.preventDefault()
                 }
-    
+
                 function dropAct(zone, dropEvent) {
                     if (dropEvent.target.parentElement) {
                         movedItem.parentElement.append(dropEvent.target)
@@ -149,11 +206,11 @@ window.onload = function (loadEvent) {
                         }
                     }
                 }
-    
+
                 function dragEnd(rect, dragEndEvent) {
                     movedItem.classList.remove("dn")
                 }
-    
+
             }
         })
 
