@@ -693,9 +693,9 @@ h1 {
 }
 
 .read-more-box {
-    /* display: flex;
+    display: flex;
     flex-direction: column;
-    justify-content: center; */
+    justify-content: center;
     position: fixed;
     left: 0;
     top: 0;
@@ -1221,11 +1221,11 @@ h1 {
         padding: 100px 30px;
     }
 
-    .read-more-box {
+    /* .read-more-box {
         display: flex;
         flex-direction: column;
         justify-content: center;
-    }
+    } */
 }
 
 @media (min-width: 768px) {

@@ -458,11 +458,14 @@ window.onload = function (loadEvent) {
 
             readMoreBtns.forEach((btn) => {
                 btn.addEventListener("click", () => {
+                    if (document.querySelector(".read-more-content").querySelector(".text")) {
+                        document.querySelector(".read-more-content").querySelector(".text").remove()
+                    }
                     document.querySelector(".read-more-box").classList.remove("dn")
                     let p = document.createElement("p"),
                         text = btn.closest(".post").querySelector(".text").innerText
                     p.classList.add("text", "post-paragraph")
-                    p.textContent = text + "\n\n" + text
+                    p.textContent = text
                     document.querySelector(".read-more-content").append(p)
                 })
             })
