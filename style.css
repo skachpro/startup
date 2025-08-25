@@ -279,6 +279,12 @@ h1 {
     cursor: pointer;
 }
 
+.abs-centr {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
 .answer.answer-disabled {
     background-color: grey;
     color: #000000;
@@ -787,23 +793,24 @@ h1 {
 }
 
 .clients-logos {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: auto;
-    gap: 30px;
-    overflow-x: scroll;
-    max-width: 900px;
+    position: relative;
+    text-align: left;
+    overflow: hidden;
     margin-bottom: 90px;
+    height: 50px;
 }
 
-.clients-logos::-webkit-scrollbar {
-    display: none;
+.client-logo {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 150px;
+    max-height: 50px;
+    transform: translateY(-50%)
 }
-
-.clients-logo {
-    width: 140px;
-    height: 20px;
+.client-logo.anim-bottom {
+    top: 0;
+    transform: translateY(50px);
 }
 
 .clients-texts {

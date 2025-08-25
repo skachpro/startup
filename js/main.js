@@ -9,7 +9,6 @@ window.onload = function (loadEvent) {
         servicesItemsBox = document.querySelector(".services-items"),
         servicesItemTitle = [...document.querySelectorAll(".services-item-title")],
         readMoreBtns = [...document.querySelectorAll(".read-more")],
-        aboutUsIcons = [...document.querySelectorAll(".about-us-icons")],
         footerFormInputs = [...document.querySelectorAll(".input")],
         formData,
         scrollCardInfo = {
@@ -35,26 +34,15 @@ window.onload = function (loadEvent) {
             }
         },
         sliderWidth = parseFloat(getComputedStyle(document.querySelector(".about-us-scroll-box")).width),
-        cardPattern = `\n<figure class="scroll-card">
-                        <img class="person" src="" alt="">
-                        <figcaption class="scroll-card-info">
-                            <div class="icons about-us-icons dn">
-                                <span class="icon about-us-icons-icon icon-fcb"></span>
-                                <span class="icon about-us-icons-icon icon-twt"></span>
-                                <span class="icon about-us-icons-icon icon-gp"></span>
-                                <span class="icon about-us-icons-icon icon-in"></span>
-                            </div>
-                            <h3 class="scroll-card-name"></h3>
-                            <p class="scroll-card-role"></p>
-                        </figcaption>
-                    </figure>`,
         close = [...document.querySelectorAll(".close")],
         latestWorksCardsSection = document.querySelector(".latest-works-cards"),
         latestWorksBtns = [...document.querySelectorAll(".latest-works-categories-item")],
         gap,
         sliderCards,
         elementsWithAnimation = [...document.querySelectorAll(".animation")],
-        headerNavLinks = [...document.querySelectorAll(".nav-link")]
+        headerNavLinks = [...document.querySelectorAll(".nav-link")],
+        clientsSlider = document.querySelector(".clients-logos"),
+        clientsLogosArr = ["images/deorham.webp", "images/ratings.webp", "images/malik-media.webp", "images/bcause.webp", "images/womgify.webp"]
 
     localStorage.isLoged = "false"
 
@@ -86,8 +74,7 @@ window.onload = function (loadEvent) {
             answerBtn.addEventListener("click", () => {
                 if (answerBtn.classList.contains("answer-disabled")) return
 
-                let answersArr = [],
-                    rightArr = [1, 2, 3, 4],
+                let rightArr = [1, 2, 3, 4],
                     rects = [...document.querySelectorAll(".box-num")],
                     correct = true
 
@@ -156,7 +143,7 @@ window.onload = function (loadEvent) {
                                     rectParent = rect.parentElement
 
                                 if (
-                                    rectPos.left >= zonePos.left && 
+                                    rectPos.left >= zonePos.left &&
                                     rectPos.right <= zonePos.right &&
                                     rectPos.top >= zonePos.top &&
                                     rectPos.bottom <= zonePos.bottom
@@ -214,14 +201,9 @@ window.onload = function (loadEvent) {
             }
         })
 
-
-
     } else {
         getStartedBtn.classList.add("dn")
     }
-
-
-
 
     let leftArray = []
     for (let i = 0; i < 4; i++) {
@@ -260,7 +242,6 @@ window.onload = function (loadEvent) {
         gap = parseInt((howMuchCards > 1) ? (sliderWidth - (howMuchCards * 263)) / (howMuchCards - 1) : sliderWidth)
         let left = (263 + gap) * i
 
-        //console.log(left, gap)
         figure.setAttribute("data-left", left.toFixed())
         figure.style.left = `${left.toFixed()}px`
         leftArray.push(+left.toFixed())
@@ -301,7 +282,6 @@ window.onload = function (loadEvent) {
 
                     }
                     if (oldLeft == +leftArray[3] + 263 + gap) {
-                        // console.log(sliderCards)
                         newCard = sliderCards[2].cloneNode(true)
                         newLeft = newLeft + 263 + gap
 
@@ -460,9 +440,7 @@ window.onload = function (loadEvent) {
 
                     latestWorksCardsSection.append(figure)
                 })
-                // latestWorksCardsSection.style.height = getComputedStyle(latestWorksCardsSection).height
             }
-            //console.log(elementsWithAnimation.length)
         })
         .then(() => {
             for (let element of elemsWithParallax) {
@@ -499,6 +477,7 @@ window.onload = function (loadEvent) {
 
                     clickinterval = setInterval(() => {
                         clickCounter = 0
+                        clearInterval(clickinterval)
                     }, 800)
                 }
             })
@@ -533,6 +512,70 @@ window.onload = function (loadEvent) {
                     close.closest(".parent").classList.add("dn")
                 })
             })
+            let logosGap
+            clientsLogosArr.forEach((logoPath, i) => {
+                let img = document.createElement("img"),
+                    sliderWidth = Math.floor(clientsSlider.getBoundingClientRect().width),
+                    howMuchCards = Math.floor(sliderWidth / (150 + 20)) > clientsLogosArr.length ? clientsLogosArr.length : Math.floor(sliderWidth / (150 + 20))
+                logosGap = parseInt((howMuchCards > 1) ? (sliderWidth - (howMuchCards * 150)) / (howMuchCards - 1) : sliderWidth)
+                let left = (150 + logosGap) * i,
+                    delay = 0.4
+
+                img.classList.add("client-logo", "animation", "anim-bottom")
+                img.src = logoPath
+                img.style.left = `${left}px`
+                img.style.transition = `all ${1 + i * delay}s`
+                clientsSlider.append(img)
+                // let appendedImg = clientsSlider.querySelector(`[src="${logoPath}"]`)
+                // appendedImg.style.top = `${Math.floor(50 - appendedImg.getBoundingClientRect().height) / 2}px`
+                // console.log(appendedImg.getBoundingClientRect().height, Math.floor(50 - parseFloat(getComputedStyle(appendedImg).height)) / 2, getComputedStyle(appendedImg).height)
+                if (i + 1 === clientsLogosArr.length) {
+                    let imgClone = clientsSlider.querySelector(".client-logo").cloneNode(true)
+                    imgClone.style.left = `${left + (150 + logosGap)}px`
+                    imgClone.style.transition = `all ${1 + i * (delay * 2)}s`
+                    clientsSlider.append(imgClone)
+                }
+            })
+
+            function infinityScroll() {
+                setTimeout(() => {
+                    let allLogos = [...document.querySelectorAll(".client-logo")],
+                        intervalId
+                    allLogos.forEach(logo => {
+                        logo.style.transitionDuration = "1s"
+                    })
+
+                    let speed = 150
+                    sliderRun()
+                    
+                    clientsSlider.addEventListener("mouseenter", () => {
+                        clearInterval(intervalId)
+                    })
+                    clientsSlider.addEventListener("mouseleave", () => {
+                        sliderRun()
+                    })
+                    function sliderRun() {
+                        // let frameDelay = 16??
+
+                        intervalId = setInterval(() => {
+                            allLogos.forEach(logo => {
+                                let currentLeft = Math.floor(parseFloat(logo.style.left))
+                                logo.style.left = `${Math.floor(currentLeft - logosGap)}px`
+                                if (parseFloat(getComputedStyle(allLogos[1]).left) <= 0) {
+                                    console.log(allLogos)
+                                    let cloneLogo = allLogos[1].cloneNode(true)
+                                    cloneLogo.style.left = `${parseFloat(getComputedStyle(allLogos[allLogos.length - 1]).left) + logosGap}px`
+                                    console.log(allLogos[0], cloneLogo)
+                                    clientsSlider.append(cloneLogo)
+                                    allLogos[0].remove()
+                                    allLogos = [...document.querySelectorAll(".client-logo")]
+                                }
+                                // clearInterval(intervalId)
+                            })
+                        }, 2000)
+                    }
+                }, 3200)
+            }
 
             elementsWithAnimation = [...document.querySelectorAll(".animation")]
 
@@ -559,6 +602,11 @@ window.onload = function (loadEvent) {
                 if (elementPos.top > window.scrollY) {
                     if (elementPos.top < window.scrollY + window.innerHeight) {
                         removeAnim(element)
+                        if (!element.parentElement.classList.contains("scroll-run")) {
+                            console.log(element)
+                            element.parentElement.classList.add("scroll-run")
+                            infinityScroll()
+                        }
                     } else {
                         distsanceToAnimatedElemArray.push([element, elementPos.top])
                     }
@@ -566,43 +614,19 @@ window.onload = function (loadEvent) {
                     removeAnim(element)
                 }
             }
-            // console.log(distsanceToAnimatedElemArray)
-
             window.onscroll = (e) => {
                 let zoneBottomBorder = window.scrollY + window.innerHeight
                 distsanceToAnimatedElemArray.forEach(data => {
                     if (zoneBottomBorder > data[1]) {
                         removeAnim(data[0])
                         distsanceToAnimatedElemArray.splice(distsanceToAnimatedElemArray.indexOf(data), 1)
-                        console.log(distsanceToAnimatedElemArray)
-                        console.log(distsanceToAnimatedElemArray, zoneBottomBorder, data[1])
-                    } else {
-
+                        if (data[0].classList.contains("client-logo") && !data[0].parentElement.classList.contains("scroll-run")) {
+                            console.log(data[0])
+                            data[0].parentElement.classList.add("scroll-run")
+                            infinityScroll()
+                        }
                     }
                 })
             }
-
-            //console.log(elementsWithAnimation.length)
-            /* let elementsWithAnimationArray = []
-            for (let i = 0; i < elementsWithAnimation.length; i++) {
-                let res = elementsWithAnimation[i].offsetTop
-                if (elementsWithAnimation[i].classList.contains("anim-top")) {
-                    res += parseFloat(getComputedStyle(elementsWithAnimation[i]).height)
-                } else if (elementsWithAnimation[i].classList.contains("anim-bottom")) {
-                    res -= parseFloat(getComputedStyle(elementsWithAnimation[i]).height)
-                }
-                // console.table(elementsWithAnimation[i].getBoundingClientRect().top, elementsWithAnimation[i].parentElement.getBoundingClientRect().height)
-                if (res > window.scrollY) {
-                    console.log(document.documentElement.scrollHeight, "Test")
-                    elementsWithAnimationArray.push(res)
-                } else {
-                    console.log("Елемент який вище нашого проскролу", elementsWithAnimation[i].offsetTop, elementsWithAnimation[i], res)
-                    let animStyleClass = JSON.stringify(elementsWithAnimation[i].classList).match(/(anim-)\w+/g)
-                    elementsWithAnimation[i].classList.remove(animStyleClass)
-                    console.log(elementsWithAnimation[i], animStyleClass)
-                }
-                console.log(elementsWithAnimationArray, window.scrollY)
-            } */
-
         })
 }
