@@ -512,7 +512,10 @@ window.onload = function (loadEvent) {
                     close.closest(".parent").classList.add("dn")
                 })
             })
-            let logosGap
+
+            let logosGap,
+                logosCoach = document.createElement("div")
+            console.log(logosCoach)
             clientsLogosArr.forEach((logoPath, i) => {
                 let img = document.createElement("img"),
                     sliderWidth = Math.floor(clientsSlider.getBoundingClientRect().width),
@@ -520,62 +523,126 @@ window.onload = function (loadEvent) {
                 logosGap = parseInt((howMuchCards > 1) ? (sliderWidth - (howMuchCards * 150)) / (howMuchCards - 1) : sliderWidth)
                 let left = (150 + logosGap) * i,
                     delay = 0.4
+                console.log(left)
 
+                logosCoach.classList.add("logos-coach")
                 img.classList.add("client-logo", "animation", "anim-bottom")
                 img.src = logoPath
+                img.style.transition = `transform ${i * delay + delay}s`
                 img.style.left = `${left}px`
-                img.style.transition = `all ${1 + i * delay}s`
-                clientsSlider.append(img)
-                // let appendedImg = clientsSlider.querySelector(`[src="${logoPath}"]`)
-                // appendedImg.style.top = `${Math.floor(50 - appendedImg.getBoundingClientRect().height) / 2}px`
-                // console.log(appendedImg.getBoundingClientRect().height, Math.floor(50 - parseFloat(getComputedStyle(appendedImg).height)) / 2, getComputedStyle(appendedImg).height)
+                logosCoach.append(img)
                 if (i + 1 === clientsLogosArr.length) {
-                    let imgClone = clientsSlider.querySelector(".client-logo").cloneNode(true)
-                    imgClone.style.left = `${left + (150 + logosGap)}px`
-                    imgClone.style.transition = `all ${1 + i * (delay * 2)}s`
-                    clientsSlider.append(imgClone)
+                    logosCoach.style.width = `${parseInt(img.style.left) + 150}px`
                 }
             })
+            clientsSlider.style.width = `${parseFloat(getComputedStyle(clientsSlider).width) - (parseFloat(getComputedStyle(clientsSlider).width) % 10)}px`
+            clientsSlider.append(logosCoach)
 
-            function infinityScroll() {
+            infinitySlider()
+
+            function infinitySlider () {
                 setTimeout(() => {
-                    let allLogos = [...document.querySelectorAll(".client-logo")],
-                        intervalId
-                    allLogos.forEach(logo => {
-                        logo.style.transitionDuration = "1s"
-                    })
-
-                    let speed = 150
-                    sliderRun()
-                    
-                    clientsSlider.addEventListener("mouseenter", () => {
-                        clearInterval(intervalId)
-                    })
-                    clientsSlider.addEventListener("mouseleave", () => {
-                        sliderRun()
-                    })
-                    function sliderRun() {
-                        // let frameDelay = 16??
-
-                        intervalId = setInterval(() => {
-                            allLogos.forEach(logo => {
-                                let currentLeft = Math.floor(parseFloat(logo.style.left))
-                                logo.style.left = `${Math.floor(currentLeft - logosGap)}px`
-                                if (parseFloat(getComputedStyle(allLogos[1]).left) <= 0) {
-                                    console.log(allLogos)
-                                    let cloneLogo = allLogos[1].cloneNode(true)
-                                    cloneLogo.style.left = `${parseFloat(getComputedStyle(allLogos[allLogos.length - 1]).left) + logosGap}px`
-                                    console.log(allLogos[0], cloneLogo)
-                                    clientsSlider.append(cloneLogo)
-                                    allLogos[0].remove()
-                                    allLogos = [...document.querySelectorAll(".client-logo")]
-                                }
-                                // clearInterval(intervalId)
-                            })
-                        }, 2000)
-                    }
+                    infinitySliderAct ()
                 }, 3200)
             }
+
+            function infinitySliderAct () {
+                let allCoaches = [...clientsSlider.querySelectorAll(".logos-coach")]
+                // let intervalId = setInterval(() => {
+                setTimeout(() => {
+                    let newCoach = createNewCoach ((allCoaches.length < 1) ? logosCoach : allCoaches[allCoaches.length - 1]) //Перевірити
+                    console.log((allCoaches.length < 1) ? logosCoach : allCoaches[allCoaches.length - 1])
+                    console.log(newCoach)
+                    allCoaches = [...clientsSlider.querySelectorAll(".logos-coach")]
+                    moveCoaches (allCoaches)
+                    // clearInterval(intervalId)
+                }, 1000) 
+                // }, 1000)
+            }
+
+            function createNewCoach (exampleCoach, pos) {
+                let newCoach = exampleCoach.cloneNode(true),
+                    newCoachLogos = [...newCoach.querySelectorAll(".client-logo")]
+                newCoachLogos.forEach((logo, i) => {
+                    if (exampleCoach === clientsSlider.firstElementChild) {
+                        logo.style.left = `${parseInt(logo.style.left) + logosGap}px`
+                    }
+                })
+                newCoach.style.width = `${parseInt(newCoach.style.width) + logosGap}px`
+                clientsSlider.append(newCoach)
+                return newCoach
+            }
+
+            function moveCoaches (allCoaches) {
+                console.log(allCoaches)
+
+                allCoaches.forEach((coach, i) => {
+                    console.log(getComputedStyle(coach).left)
+                    coach.style.transition = "left 5s linear"
+                    if (i < 1) {
+                        coach.style.left = `calc(-100% - 150px)`
+                    } else {
+                        coach.style.left = `-150px`
+                    }
+                })
+                setTimeout(() => {
+                    createNewCoach (allCoaches[1])
+                    allCoaches[0].remove()
+                    allCoaches = [...clientsSlider.querySelectorAll(".logos-coach")]
+    
+                    allCoaches.forEach((coach, i) => {
+                        console.log(getComputedStyle(coach).left)
+                        coach.style.transition = "0s"
+                        coach.style.left = i >= 1 ? "100%" : "-150px"
+                    })
+                }, 5000)
+            }
+
+            // function createNewCoach(exampleCoach) {
+            //     let newCoach = exampleCoach.cloneNode(true),
+            //         logosInNewCoach = [...newCoach.querySelectorAll(".client-logo")]
+            //     // console.log(logosInNewCoach)
+            //     newCoach.dataset.number = 2
+            //     exampleCoach.dataset.number = 1
+            //     newCoach.style.minWidth = `${parseInt(newCoach.style.minWidth) + logosGap}px`
+            //     logosInNewCoach.forEach((logo, i) => {
+            //         if (exampleCoach === clientsSlider.querySelector(".logos-coach")) {
+            //             logo.style.left = `${parseInt(logo.style.left) + logosGap}px`
+            //         } else {
+            //             logo.style.left = `${parseInt(logo.style.left)}px`
+            //         }
+            //         // logo.dataset.number = i
+            //         logo.classList.remove("animation", "anim-bottom")
+            //     })
+            //     // console.log(newCoach, logosGap)
+            //     clientsSlider.append(newCoach)
+            // }
+
+            // function infinityScroll() {
+            //     setTimeout(() => {
+            //         createNewCoach(logosCoach)
+            //         let sliderCoaches
+            //         let intervalId = setInterval(() => {
+            //             sliderCoaches = [...document.querySelectorAll(".logos-coach")]
+            //             sliderCoaches.forEach((coach, i) => {
+            //                 if (coach.style.transform === `transform 0s`) {
+            //                     coach.style.transform = "5s"
+            //                     coach.classList.remove("onstart")
+            //                 }
+            //                 coach.style.transform = `translateX(${i > 0 ? "calc(-100%)" : "calc(-100% - 150px)"})`
+            //             })
+            //             if (Math.abs(parseInt(sliderCoaches[1].getBoundingClientRect().right) - parseInt(clientsSlider.getBoundingClientRect().right)) <= 20) {
+            //                 sliderCoaches[1].style.transition = `transform 0s`
+            //                 sliderCoaches[1].style.transform = "none"
+            //                 sliderCoaches[1].classList.add('onstart')
+            //                 createNewCoach(sliderCoaches[1])
+            //                 sliderCoaches[0].remove()
+            //                 console.log("TEST")
+            //                 // clearInterval(intervalId)
+            //             }
+            //         }, 1000)
+            //     }, 3200)
+            // }
 
             elementsWithAnimation = [...document.querySelectorAll(".animation")]
 
@@ -604,8 +671,8 @@ window.onload = function (loadEvent) {
                         removeAnim(element)
                         if (!element.parentElement.classList.contains("scroll-run")) {
                             console.log(element)
-                            element.parentElement.classList.add("scroll-run")
-                            infinityScroll()
+                            element.parentElement.parentElement.classList.add("scroll-run")
+                            // infinityScroll()
                         }
                     } else {
                         distsanceToAnimatedElemArray.push([element, elementPos.top])
@@ -623,7 +690,7 @@ window.onload = function (loadEvent) {
                         if (data[0].classList.contains("client-logo") && !data[0].parentElement.classList.contains("scroll-run")) {
                             console.log(data[0])
                             data[0].parentElement.classList.add("scroll-run")
-                            infinityScroll()
+                            // infinityScroll()
                         }
                     }
                 })

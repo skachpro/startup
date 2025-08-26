@@ -794,10 +794,25 @@ h1 {
 
 .clients-logos {
     position: relative;
-    text-align: left;
-    overflow: hidden;
     margin-bottom: 90px;
+    overflow: hidden;
+}
+
+.clients-logos, 
+.logos-coach {
     height: 50px;
+}
+
+.logos-coach {
+    position: absolute;
+    transition: left 5s linear;
+    left: 0;
+    top: 0;
+    width: 100%;
+}
+
+.logos-coach:not(:first-child) {
+    left: 100%;
 }
 
 .client-logo {
