@@ -710,7 +710,8 @@ h1 {
     z-index: 3;
 }
 
-.read-more-box .popup-bg {
+.read-more-box .popup-bg,
+.popup-bg {
     position: fixed;
     left: 0;
     top: 0;
@@ -745,7 +746,8 @@ h1 {
 
 }
 
-.read-more-close-btn {
+.read-more-close-btn,
+.check-form-close-btn {
     position: absolute;
     right: 10px;
     top: 10px;
@@ -756,7 +758,9 @@ h1 {
 }
 
 .read-more-close-btn::before,
-.read-more-close-btn::after {
+.read-more-close-btn::after,
+.check-form-close-btn::before,
+.check-form-close-btn::after {
     content: "";
     position: absolute;
     left: 50%;
@@ -765,12 +769,14 @@ h1 {
     background-color: #000;
 }
 
-.read-more-close-btn::before {
+.read-more-close-btn::before,
+.check-form-close-btn::before {
     height: 100%;
     transform: rotate(45deg) translateX(-50%);
 }
 
-.read-more-close-btn::after {
+.read-more-close-btn::after,
+.check-form-close-btn::after {
     height: 100%;
     transform: rotate(-45deg) translateX(-50%);
 }
@@ -803,7 +809,7 @@ h1 {
     overflow: hidden;
 }
 
-.clients-logos, 
+.clients-logos,
 .logos-coach {
     height: 50px;
 }
@@ -828,6 +834,7 @@ h1 {
     max-height: 50px;
     transform: translateY(-50%)
 }
+
 .client-logo.anim-bottom {
     top: 0;
     transform: translateY(50px);
@@ -846,7 +853,7 @@ h1 {
     line-height: 30px;
     margin: auto;
     margin-bottom: 40px;
-    
+
 }
 
 .clients-text,
@@ -1221,6 +1228,41 @@ h1 {
     /* justify-content: space-between; */
 }
 
+.check-form-layer,
+.check-form {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, .3);
+    backdrop-filter: blur(2px);
+    z-index: 2;
+}
+
+.check-form-box {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    overflow: scroll;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 15px;
+    z-index: 3;
+}
+
+.check-form-heading {
+    display: flex;
+    justify-content: center;
+    font-size: 36rem;
+    padding-top: 10px;
+    margin-bottom: 20px;
+}
+
+
 @media (min-width: 480px) {
     .wrapper {
         padding-left: 0;
@@ -1245,6 +1287,13 @@ h1 {
     .read-more-content {
         width: 80%;
 
+    }
+
+    .check-form-box {
+        width: 80%;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
     }
 }
 
@@ -1332,6 +1381,10 @@ h1 {
     .latest-works-cards {
         grid-template-columns: .5fr .5fr;
 
+    }
+
+    .check-form-heading {
+        margin-bottom: 40px;
     }
 }
 

@@ -484,13 +484,26 @@ window.onload = function (loadEvent) {
             })
 
             formData = {}
-            document.forms.form.addEventListener("submit", () => {
-                footerFormInputs.forEach((element) => {
-                    if (element.value.length > 0 && element.value.length < 150) {
-                        formData[element.name] = element.value
-                    }
-                })
-                localStorage.setItem("formData", JSON.stringify(formData))
+            document.forms.form.addEventListener("submit", (e) => {
+                e.preventDefault()
+                let checkCorrectPopup = document.querySelector(".check-form"),
+                    checkFormBox = checkCorrectPopup.querySelector(".check-form-box"),
+                    formCopy = document.forms.form.cloneNode(true),
+                    formBox = document.createElement("div")
+                formBox.classList.add("form-box")
+                if (checkFormBox.querySelector("form")) {
+                    formBox.remove()
+                }
+                formBox.append(formCopy)
+                checkFormBox.append(formBox)
+                checkCorrectPopup.classList.remove("dn")
+                // checkFormBox.append(document.forms.form.cloneNode(true))
+                // footerFormInputs.forEach((element) => {
+                //     if (element.value.length > 0 && element.value.length < 150) {
+                //         formData[element.name] = element.value
+                //     }
+                // })
+                // localStorage.setItem("formData", JSON.stringify(formData))
             })
 
             readMoreBtns.forEach((btn) => {
