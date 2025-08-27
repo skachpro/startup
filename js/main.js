@@ -581,13 +581,11 @@ window.onload = function (loadEvent) {
             }
 
             function moveCoaches(allCoaches, delay) {
-                // console.log(allCoaches, "AllCoaches")
 
                 allCoaches.forEach((coach, i) => {
                     coach.style.transition = `left ${delay}ms linear`
                     coach.style.left = `calc(100% * ${i - 1}${i > 0 ? "" : ` - ${logosGap}px`})`
-                    console.log(coach.firstElementChild.offsetLeft ? "" : "")
-                    // console.log(coach)
+                    coach.firstElementChild.offsetLeft //Роблю це для того щоб перерахувати усі позиції для правильного рендера
                 })
                 setTimeout(() => {
                     createNewCoach(allCoaches[1])
@@ -596,7 +594,6 @@ window.onload = function (loadEvent) {
                     allCoaches.forEach((coach, i) => {
                         coach.style.transition = "0s"
                         coach.style.left = `calc(100% * ${i}${i > 0 ? " + " + logosGap + "px" : ""})`
-                        // console.log(coach)
                     })
                     infinitySliderAct()
                 }, delay <= 1000 ? 0 : delay - 1000)
@@ -609,10 +606,13 @@ window.onload = function (loadEvent) {
                         autor = clientsText.querySelector(".client"),
                         dotsBox = clientsText.querySelector(".dots")
 
-                    function inputContent(dot, data) {
+                    function inputContent(dot, data, event) {
                         text.classList.add("anim-visible")
                         autor.classList.add("anim-visible")
                         setTimeout(() => {
+                            if (event) {
+                                dot.classList.remove("dot-pressed")
+                            }
                             text.classList.remove("anim-visible")
                             autor.classList.remove("anim-visible")
                             text.innerText = data[dot.dataset.number - 1].text
@@ -630,8 +630,9 @@ window.onload = function (loadEvent) {
                         let dot = document.createElement("span")
                         dot.className = "dot"
                         dot.dataset.number = i + 1
-                        dot.addEventListener("click", () => {
-                            inputContent(dot, result)
+                        dot.addEventListener("click", (e) => {
+                            dot.classList.add("dot-pressed")
+                            inputContent(dot, result, e)
                         })
                         if (i < 1) {
                             inputContent(dot, result)

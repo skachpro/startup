@@ -886,6 +886,10 @@ h1 {
     background-color: rgba(192, 48, 28, .5);
 }
 
+.dot-pressed {
+    background-color: rgba(192, 48, 28, .5);
+}
+
 .dot-active {
     background-color: rgb(192, 48, 28);
 }
@@ -1295,6 +1299,13 @@ h1 {
         top: 50%;
         transform: translate(-50%, -50%);
     }
+
+    .check-form-box {
+        height: auto;
+        padding: 30px;
+        border-radius: 25px;
+        overflow: auto;
+    }
 }
 
 @media (min-width: 667px) {
@@ -1386,6 +1397,8 @@ h1 {
     .check-form-heading {
         margin-bottom: 40px;
     }
+
+    
 }
 
 @media (min-width: 800px) {
@@ -1427,6 +1440,10 @@ h1 {
 
     .latest-works-cards {
         grid-template-columns: repeat(3, 1fr);
+    }
+    .check-form-box {
+        width: 70%;
+        
     }
 
 }
