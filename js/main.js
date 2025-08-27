@@ -44,7 +44,7 @@ window.onload = function (loadEvent) {
         clientsSlider = document.querySelector(".clients-logos"),
         clientsLogosArr = ["images/deorham.webp", "images/ratings.webp", "images/malik-media.webp", "images/bcause.webp", "images/womgify.webp"],
         clientsText = document.querySelector(".clients-texts")
-    
+
     localStorage.isLoged = "false"
 
     if (localStorage.isLoged === undefined || localStorage.isLoged === "false") {
@@ -538,46 +538,46 @@ window.onload = function (loadEvent) {
             })
             clientsSlider.style.width = `${parseFloat(getComputedStyle(clientsSlider).width) - (parseFloat(getComputedStyle(clientsSlider).width) % 10)}px`
             clientsSlider.append(logosCoach)
-            
+
             // infinitySlider()
 
-            function infinitySlider () {
+            function infinitySlider() {
                 setTimeout(() => {
-                    infinitySliderAct ()
+                    infinitySliderAct()
                 }, 3200)
             }
 
-            function infinitySliderAct () {
+            function infinitySliderAct() {
                 let allCoaches = [...clientsSlider.querySelectorAll(".logos-coach")]
                 setTimeout(() => {
                     if (allCoaches.length < 2) {
-                        let newCoach = createNewCoach ((allCoaches.length < 1) ? logosCoach : allCoaches[allCoaches.length - 1]) //Перевірити
+                        let newCoach = createNewCoach((allCoaches.length < 1) ? logosCoach : allCoaches[allCoaches.length - 1]) //Перевірити
                         // console.log((allCoaches.length < 1) ? logosCoach : allCoaches[allCoaches.length - 1])
                         // console.log(newCoach)
                     }
                     allCoaches = [...clientsSlider.querySelectorAll(".logos-coach")]
-                    moveCoaches (allCoaches, 10000)
-                }, 1000) 
+                    moveCoaches(allCoaches, 10000)
+                }, 1000)
             }
 
-            function createNewCoach (exampleCoach, pos) {
+            function createNewCoach(exampleCoach, pos) {
                 let newCoach = exampleCoach.cloneNode(true)
                 newCoach.style.left = `${parseInt(getComputedStyle(exampleCoach).width) + logosGap}px`
                 clientsSlider.append(newCoach)
                 return newCoach
             }
 
-            function moveCoaches (allCoaches, delay) {
+            function moveCoaches(allCoaches, delay) {
                 // console.log(allCoaches, "AllCoaches")
 
                 allCoaches.forEach((coach, i) => {
                     coach.style.transition = `left ${delay}ms linear`
                     coach.style.left = `calc(100% * ${i - 1}${i > 0 ? "" : ` - ${logosGap}px`})`
-                    console.log(coach.firstElementChild.offsetLeft)
+                    console.log(coach.firstElementChild.offsetLeft ? "" : "")
                     // console.log(coach)
                 })
                 setTimeout(() => {
-                    createNewCoach (allCoaches[1])
+                    createNewCoach(allCoaches[1])
                     allCoaches[0].remove()
                     allCoaches = [...clientsSlider.querySelectorAll(".logos-coach")]
                     allCoaches.forEach((coach, i) => {
@@ -585,58 +585,116 @@ window.onload = function (loadEvent) {
                         coach.style.left = `calc(100% * ${i}${i > 0 ? " + " + logosGap + "px" : ""})`
                         // console.log(coach)
                     })
-                    infinitySliderAct ()
+                    infinitySliderAct()
                 }, delay <= 1000 ? 0 : delay - 1000)
             }
 
-            elementsWithAnimation = [...document.querySelectorAll(".animation")]
+            fetch("js/quotes.json")
+                .then(response => response.json())
+                .then(result => {
+                    let text = clientsText.querySelector(".clients-text"),
+                        autor = clientsText.querySelector(".client"),
+                        dotsBox = clientsText.querySelector(".dots")
 
-            function removeAnim(elem) {
-                if (JSON.stringify(elem.classList).match(/(anim-)\w+/g)) {
-                    elem.classList.remove(JSON.stringify(elem.classList).match(/(anim-)\w+/g)[0])
-                }
-            }
-
-            let distsanceToAnimatedElemArray = []
-            for (let element of elementsWithAnimation) {
-                let scrollPos = window.scrollY,
-                    elementPos = {
-                        elem: element,
-                        top: element.getBoundingClientRect().top + scrollPos,
+                    function inputContent(dot, data) {
+                        text.classList.add("anim-visible")
+                        autor.classList.add("anim-visible")
+                        setTimeout(() => {
+                            text.classList.remove("anim-visible")
+                            autor.classList.remove("anim-visible")
+                            text.innerText = data[dot.dataset.number - 1].text
+                            autor.innerText = data[dot.dataset.number - 1].autor
+                            if (!dot.classList.contains("dot-active")) {
+                                let dotsBox = clientsText.querySelector(".dots")
+                                if (dotsBox.querySelector(".dot-active")) {
+                                    dotsBox.querySelector(".dot-active").classList.remove("dot-active")
+                                }
+                                dot.classList.add("dot-active")
+                            }
+                        }, 1000)
+                    }
+                    for (let i = 0; i < result.length; i++) {
+                        let dot = document.createElement("span")
+                        dot.className = "dot"
+                        dot.dataset.number = i + 1
+                        dot.addEventListener("click", () => {
+                            inputContent(dot, result)
+                        })
+                        if (i < 1) {
+                            inputContent(dot, result)
+                        }
+                        dotsBox.append(dot)
+                    }
+                    function quotesChange() {
+                        intervalId = setInterval(() => {
+                            let activeDot = document.querySelector(".dot-active")
+                            inputContent(activeDot.nextElementSibling ? activeDot.nextElementSibling : dotsBox.firstElementChild, result)
+                        }, 5000)
                     }
 
-                if (element.classList.contains("anim-top")) {
-                    elementPos.top += parseFloat(getComputedStyle(element).height)
-                } else if (element.classList.contains("anim-bottom")) {
-                    elementPos.top -= parseFloat(getComputedStyle(element).height)
-                }
+                    let intervalId
+                    quotesChange()
+                    // clearInterval(intervalId)
 
-                if (elementPos.top > window.scrollY) {
-                    if (elementPos.top < window.scrollY + window.innerHeight) {
-                        removeAnim(element)
-                        if (element === element.parentElement.lastElementChild) {
-                            // infinitySlider()
+                    clientsText.addEventListener("mouseenter", () => {
+                        clearInterval(intervalId)
+                    })
+                    clientsText.addEventListener("mouseleave", () => {
+                        quotesChange()
+                    })
+                })
+                .then(() => {
+                    elementsWithAnimation = [...document.querySelectorAll(".animation")]
+
+                    function removeAnim(elem) {
+                        if (JSON.stringify(elem.classList).match(/(anim-)\w+/g)) {
+                            elem.classList.remove(JSON.stringify(elem.classList).match(/(anim-)\w+/g)[0])
                         }
-                    } else {
-                        distsanceToAnimatedElemArray.push([element, elementPos.top])
                     }
-                } else {
-                    removeAnim(element)
-                }
-            }
-            window.onscroll = (e) => {
-                let zoneBottomBorder = window.scrollY + window.innerHeight
-                distsanceToAnimatedElemArray.forEach(data => {
-                    if (zoneBottomBorder > data[1]) {
-                        removeAnim(data[0])
-                        distsanceToAnimatedElemArray.splice(distsanceToAnimatedElemArray.indexOf(data), 1)
-                        if (data[0].classList.contains("client-logo") && !data[0].parentElement.classList.contains("scroll-run")) {
-                            // console.log(data[0])
-                            data[0].parentElement.classList.add("scroll-run")
-                            infinitySlider()
+
+                    let distsanceToAnimatedElemArray = []
+                    for (let element of elementsWithAnimation) {
+                        let scrollPos = window.scrollY,
+                            elementPos = {
+                                elem: element,
+                                top: element.getBoundingClientRect().top + scrollPos,
+                            }
+
+                        if (element.classList.contains("anim-top")) {
+                            elementPos.top += parseFloat(getComputedStyle(element).height)
+                        } else if (element.classList.contains("anim-bottom")) {
+                            elementPos.top -= parseFloat(getComputedStyle(element).height)
                         }
+
+                        if (elementPos.top > window.scrollY) {
+                            if (elementPos.top < window.scrollY + window.innerHeight) {
+                                removeAnim(element)
+                                if (element === element.parentElement.lastElementChild) {
+                                    // infinitySlider()
+                                }
+                            } else {
+                                distsanceToAnimatedElemArray.push([element, elementPos.top])
+                            }
+                        } else {
+                            removeAnim(element)
+                        }
+                    }
+                    window.onscroll = (e) => {
+                        let zoneBottomBorder = window.scrollY + window.innerHeight
+                        distsanceToAnimatedElemArray.forEach(data => {
+                            if (zoneBottomBorder > data[1]) {
+                                removeAnim(data[0])
+                                distsanceToAnimatedElemArray.splice(distsanceToAnimatedElemArray.indexOf(data), 1)
+                                if (data[0].classList.contains("client-logo") && !data[0].parentElement.classList.contains("scroll-run")) {
+                                    // console.log(data[0])
+                                    data[0].parentElement.classList.add("scroll-run")
+                                    infinitySlider()
+                                }
+                            }
+                        })
                     }
                 })
-            }
+
         })
+
 }

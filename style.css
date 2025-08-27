@@ -88,7 +88,7 @@ ul {
 
 .anim-visible {
     opacity: 0;
-    /* transition-duration: 5s !important; */
+    transition-duration: .5s;
 }
 
 header.header {
@@ -846,6 +846,13 @@ h1 {
     line-height: 30px;
     margin: auto;
     margin-bottom: 40px;
+    
+}
+
+.clients-text,
+.client {
+    transition-duration: 1s;
+
 }
 
 .client {
@@ -864,7 +871,8 @@ h1 {
     height: 15px;
     background-color: #ddd;
     border-radius: 50%;
-    transition-duration: .3s;
+    transition: all .3s, background-color .5s;
+    cursor: pointer;
 }
 
 .dot:not(.dot-active):hover {
