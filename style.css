@@ -787,9 +787,14 @@ h1 {
     background-color: #dddddd;
 }
 
+
 .clients {
     text-align: center;
     background-color: #f8f8f8;
+}
+
+.client {
+    font-style: normal;
 }
 
 .clients-logos {
