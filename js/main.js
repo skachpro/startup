@@ -42,8 +42,9 @@ window.onload = function (loadEvent) {
         elementsWithAnimation = [...document.querySelectorAll(".animation")],
         headerNavLinks = [...document.querySelectorAll(".nav-link")],
         clientsSlider = document.querySelector(".clients-logos"),
-        clientsLogosArr = ["images/deorham.webp", "images/ratings.webp", "images/malik-media.webp", "images/bcause.webp", "images/womgify.webp"]
-
+        clientsLogosArr = ["images/deorham.webp", "images/ratings.webp", "images/malik-media.webp", "images/bcause.webp", "images/womgify.webp"],
+        clientsText = document.querySelector(".clients-texts")
+    
     localStorage.isLoged = "false"
 
     if (localStorage.isLoged === undefined || localStorage.isLoged === "false") {
@@ -383,7 +384,7 @@ window.onload = function (loadEvent) {
                     let wantedDatas = []
                     res.forEach(data => {
                         if (btn.textContent !== "All") {
-                            if (btn.textContent === data.category) {
+                            if (data.category.includes(btn.textContent)) {
                                 wantedDatas.push(data)
                             }
                         } else {
@@ -427,7 +428,7 @@ window.onload = function (loadEvent) {
 
                     img.src = data.imgPath
                     h3.textContent = data.name
-                    p.textContent = data.category
+                    p.textContent = data.category[0].length > 1 ? data.category.join(", ") : data.category
                     button.dataset.cardname = data.name
 
                     button.textContent = "View"
@@ -515,7 +516,7 @@ window.onload = function (loadEvent) {
 
             let logosGap,
                 logosCoach = document.createElement("div")
-            console.log(logosCoach)
+            // console.log(logosCoach)
             clientsLogosArr.forEach((logoPath, i) => {
                 let img = document.createElement("img"),
                     sliderWidth = Math.floor(clientsSlider.getBoundingClientRect().width),
@@ -523,7 +524,7 @@ window.onload = function (loadEvent) {
                 logosGap = parseInt((howMuchCards > 1) ? (sliderWidth - (howMuchCards * 150)) / (howMuchCards - 1) : sliderWidth)
                 let left = (150 + logosGap) * i,
                     delay = 0.4
-                console.log(left)
+                // console.log(left)
 
                 logosCoach.classList.add("logos-coach")
                 img.classList.add("client-logo", "animation", "anim-bottom")
@@ -537,8 +538,8 @@ window.onload = function (loadEvent) {
             })
             clientsSlider.style.width = `${parseFloat(getComputedStyle(clientsSlider).width) - (parseFloat(getComputedStyle(clientsSlider).width) % 10)}px`
             clientsSlider.append(logosCoach)
-
-            infinitySlider()
+            
+            // infinitySlider()
 
             function infinitySlider () {
                 setTimeout(() => {
@@ -548,101 +549,45 @@ window.onload = function (loadEvent) {
 
             function infinitySliderAct () {
                 let allCoaches = [...clientsSlider.querySelectorAll(".logos-coach")]
-                // let intervalId = setInterval(() => {
                 setTimeout(() => {
-                    let newCoach = createNewCoach ((allCoaches.length < 1) ? logosCoach : allCoaches[allCoaches.length - 1]) //Перевірити
-                    console.log((allCoaches.length < 1) ? logosCoach : allCoaches[allCoaches.length - 1])
-                    console.log(newCoach)
+                    if (allCoaches.length < 2) {
+                        let newCoach = createNewCoach ((allCoaches.length < 1) ? logosCoach : allCoaches[allCoaches.length - 1]) //Перевірити
+                        // console.log((allCoaches.length < 1) ? logosCoach : allCoaches[allCoaches.length - 1])
+                        // console.log(newCoach)
+                    }
                     allCoaches = [...clientsSlider.querySelectorAll(".logos-coach")]
-                    moveCoaches (allCoaches)
-                    // clearInterval(intervalId)
+                    moveCoaches (allCoaches, 10000)
                 }, 1000) 
-                // }, 1000)
             }
 
             function createNewCoach (exampleCoach, pos) {
-                let newCoach = exampleCoach.cloneNode(true),
-                    newCoachLogos = [...newCoach.querySelectorAll(".client-logo")]
-                newCoachLogos.forEach((logo, i) => {
-                    if (exampleCoach === clientsSlider.firstElementChild) {
-                        logo.style.left = `${parseInt(logo.style.left) + logosGap}px`
-                    }
-                })
-                newCoach.style.width = `${parseInt(newCoach.style.width) + logosGap}px`
+                let newCoach = exampleCoach.cloneNode(true)
+                newCoach.style.left = `${parseInt(getComputedStyle(exampleCoach).width) + logosGap}px`
                 clientsSlider.append(newCoach)
                 return newCoach
             }
 
-            function moveCoaches (allCoaches) {
-                console.log(allCoaches)
+            function moveCoaches (allCoaches, delay) {
+                // console.log(allCoaches, "AllCoaches")
 
                 allCoaches.forEach((coach, i) => {
-                    console.log(getComputedStyle(coach).left)
-                    coach.style.transition = "left 5s linear"
-                    if (i < 1) {
-                        coach.style.left = `calc(-100% - 150px)`
-                    } else {
-                        coach.style.left = `-150px`
-                    }
+                    coach.style.transition = `left ${delay}ms linear`
+                    coach.style.left = `calc(100% * ${i - 1}${i > 0 ? "" : ` - ${logosGap}px`})`
+                    console.log(coach.firstElementChild.offsetLeft)
+                    // console.log(coach)
                 })
                 setTimeout(() => {
                     createNewCoach (allCoaches[1])
                     allCoaches[0].remove()
                     allCoaches = [...clientsSlider.querySelectorAll(".logos-coach")]
-    
                     allCoaches.forEach((coach, i) => {
-                        console.log(getComputedStyle(coach).left)
                         coach.style.transition = "0s"
-                        coach.style.left = i >= 1 ? "100%" : "-150px"
+                        coach.style.left = `calc(100% * ${i}${i > 0 ? " + " + logosGap + "px" : ""})`
+                        // console.log(coach)
                     })
-                }, 5000)
+                    infinitySliderAct ()
+                }, delay <= 1000 ? 0 : delay - 1000)
             }
-
-            // function createNewCoach(exampleCoach) {
-            //     let newCoach = exampleCoach.cloneNode(true),
-            //         logosInNewCoach = [...newCoach.querySelectorAll(".client-logo")]
-            //     // console.log(logosInNewCoach)
-            //     newCoach.dataset.number = 2
-            //     exampleCoach.dataset.number = 1
-            //     newCoach.style.minWidth = `${parseInt(newCoach.style.minWidth) + logosGap}px`
-            //     logosInNewCoach.forEach((logo, i) => {
-            //         if (exampleCoach === clientsSlider.querySelector(".logos-coach")) {
-            //             logo.style.left = `${parseInt(logo.style.left) + logosGap}px`
-            //         } else {
-            //             logo.style.left = `${parseInt(logo.style.left)}px`
-            //         }
-            //         // logo.dataset.number = i
-            //         logo.classList.remove("animation", "anim-bottom")
-            //     })
-            //     // console.log(newCoach, logosGap)
-            //     clientsSlider.append(newCoach)
-            // }
-
-            // function infinityScroll() {
-            //     setTimeout(() => {
-            //         createNewCoach(logosCoach)
-            //         let sliderCoaches
-            //         let intervalId = setInterval(() => {
-            //             sliderCoaches = [...document.querySelectorAll(".logos-coach")]
-            //             sliderCoaches.forEach((coach, i) => {
-            //                 if (coach.style.transform === `transform 0s`) {
-            //                     coach.style.transform = "5s"
-            //                     coach.classList.remove("onstart")
-            //                 }
-            //                 coach.style.transform = `translateX(${i > 0 ? "calc(-100%)" : "calc(-100% - 150px)"})`
-            //             })
-            //             if (Math.abs(parseInt(sliderCoaches[1].getBoundingClientRect().right) - parseInt(clientsSlider.getBoundingClientRect().right)) <= 20) {
-            //                 sliderCoaches[1].style.transition = `transform 0s`
-            //                 sliderCoaches[1].style.transform = "none"
-            //                 sliderCoaches[1].classList.add('onstart')
-            //                 createNewCoach(sliderCoaches[1])
-            //                 sliderCoaches[0].remove()
-            //                 console.log("TEST")
-            //                 // clearInterval(intervalId)
-            //             }
-            //         }, 1000)
-            //     }, 3200)
-            // }
 
             elementsWithAnimation = [...document.querySelectorAll(".animation")]
 
@@ -669,10 +614,8 @@ window.onload = function (loadEvent) {
                 if (elementPos.top > window.scrollY) {
                     if (elementPos.top < window.scrollY + window.innerHeight) {
                         removeAnim(element)
-                        if (!element.parentElement.classList.contains("scroll-run")) {
-                            console.log(element)
-                            element.parentElement.parentElement.classList.add("scroll-run")
-                            // infinityScroll()
+                        if (element === element.parentElement.lastElementChild) {
+                            // infinitySlider()
                         }
                     } else {
                         distsanceToAnimatedElemArray.push([element, elementPos.top])
@@ -688,9 +631,9 @@ window.onload = function (loadEvent) {
                         removeAnim(data[0])
                         distsanceToAnimatedElemArray.splice(distsanceToAnimatedElemArray.indexOf(data), 1)
                         if (data[0].classList.contains("client-logo") && !data[0].parentElement.classList.contains("scroll-run")) {
-                            console.log(data[0])
+                            // console.log(data[0])
                             data[0].parentElement.classList.add("scroll-run")
-                            // infinityScroll()
+                            infinitySlider()
                         }
                     }
                 })

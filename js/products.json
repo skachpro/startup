@@ -2,22 +2,22 @@
     {
         "imgPath": "images/works/layer_18.png",
         "name": "Hair Dresser",
-        "category": "Branding"
+        "category": ["Branding", "Strategy"]
     },
     {
         "imgPath": "images/works/layer_19.png",
         "name": "Hair Dresser",
-        "category": "Design"
+        "category": ["Design", "Development"]
     },
     {
         "imgPath": "images/works/layer_20.png",
         "name": "Hair Dresser",
-        "category": "Development"
+        "category": ["Development", "Design"]
     },
     {
         "imgPath": "images/works/layer_21.png",
         "name": "Hair Dresser",
-        "category": "Strategy"
+        "category": ["Strategy", "Branding"]
     },
     {
         "imgPath": "images/works/layer_22.png",

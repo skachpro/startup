@@ -832,6 +832,7 @@ h1 {
     color: #555555;
     font-weight: 400;
     font-family: "Roboto Slab";
+    font-style: italic;
 }
 
 .clients-text {
@@ -858,10 +859,15 @@ h1 {
     height: 15px;
     background-color: #ddd;
     border-radius: 50%;
+    transition-duration: .3s;
+}
+
+.dot:not(.dot-active):hover {
+    background-color: rgba(192, 48, 28, .5);
 }
 
 .dot-active {
-    background-color: #c0301c;
+    background-color: rgb(192, 48, 28);
 }
 
 .getInTouch {
