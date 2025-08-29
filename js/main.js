@@ -1,6 +1,5 @@
 window.onload = function (loadEvent) {
     let body = document.body,
-        headerMenu = document.querySelector(".header-menu"),
         burgerBtn = document.querySelector(".burger-btn"),
         nav = document.querySelector(".header-nav"),
         aboutUsScroll = document.querySelector(".about-us-scroll"),
@@ -210,9 +209,6 @@ window.onload = function (loadEvent) {
     } else {
         getStartedBtn.classList.add("dn")
     }
-
-
-
     let leftArray = []
     for (let i = 0; i < 4; i++) {
         let figure = document.createElement("figure"),
@@ -281,11 +277,6 @@ window.onload = function (loadEvent) {
                 sliderCards.forEach(card => {
                     newLeft = +card.dataset.left - 263 - gap
                     let oldLeft = +card.dataset.left
-                    // if (card.dataset.left < 0) {
-                    //     card.style.left = card.dataset.left + "px"
-                    //     card.dataset.left = card.dataset.left
-                    // } else {
-                    // }
                     card.style.left = newLeft + "px"
                     card.dataset.left = newLeft
                 })
@@ -296,16 +287,6 @@ window.onload = function (loadEvent) {
                 newCard.dataset.left = newLeft
                 aboutUsScroll.append(newCard)
                 sliderCards[0].remove()
-                // if (oldLeft == +leftArray[3] + 263 + gap) {
-                //     newCard = sliderCards[2].cloneNode(true)
-                //     newLeft = newLeft + 263 + gap
-
-                //     newCard.style.left = newLeft + "px"
-                //     newCard.dataset.left = newLeft
-                //     aboutUsScroll.append(newCard)
-                // }
-
-
             } else {
                 sliderCards.forEach(card => {
                     newLeft = +card.dataset.left + 263 + gap
@@ -390,7 +371,6 @@ window.onload = function (loadEvent) {
                     btn.classList.add("latest-works-categories-item-active")
                 }
             })
-            // console.log(localStorage.category)
             createLatestWorksCards(localStorage.category !== undefined ? JSON.parse(localStorage.category) : res)
             latestWorksBtns.forEach(btn => {
                 btn.addEventListener("click", () => {
@@ -546,14 +526,6 @@ window.onload = function (loadEvent) {
                         console.log(btn.closest(".parent"))
                     })
                 })
-
-                // checkFormBox.append(document.forms.form.cloneNode(true))
-                // footerFormInputs.forEach((element) => {
-                //     if (element.value.length > 0 && element.value.length < 150) {
-                //         formData[element.name] = element.value
-                //     }
-                // })
-                // localStorage.setItem("formData", JSON.stringify(formData))
             })
 
             readMoreBtns.forEach((btn) => {
@@ -579,7 +551,7 @@ window.onload = function (loadEvent) {
 
             let logosGap,
                 logosCoach = document.createElement("div")
-            // console.log(logosCoach)
+
             clientsLogosArr.forEach((logoPath, i) => {
                 let img = document.createElement("img"),
                     sliderWidth = Math.floor(clientsSlider.getBoundingClientRect().width),
@@ -587,7 +559,6 @@ window.onload = function (loadEvent) {
                 logosGap = parseInt((howMuchCards > 1) ? (sliderWidth - (howMuchCards * 150)) / (howMuchCards - 1) : sliderWidth)
                 let left = (150 + logosGap) * i,
                     delay = 0.4
-                // console.log(left)
 
                 logosCoach.classList.add("logos-coach")
                 img.classList.add("client-logo", "animation", "anim-bottom")
@@ -602,7 +573,6 @@ window.onload = function (loadEvent) {
             clientsSlider.style.width = `${parseFloat(getComputedStyle(clientsSlider).width) - (parseFloat(getComputedStyle(clientsSlider).width) % 10)}px`
             clientsSlider.append(logosCoach)
 
-            // infinitySlider()
 
             function infinitySlider() {
                 setTimeout(() => {
@@ -614,9 +584,7 @@ window.onload = function (loadEvent) {
                 let allCoaches = [...clientsSlider.querySelectorAll(".logos-coach")]
                 setTimeout(() => {
                     if (allCoaches.length < 2) {
-                        let newCoach = createNewCoach((allCoaches.length < 1) ? logosCoach : allCoaches[allCoaches.length - 1]) //Перевірити
-                        // console.log((allCoaches.length < 1) ? logosCoach : allCoaches[allCoaches.length - 1])
-                        // console.log(newCoach)
+                        let newCoach = createNewCoach((allCoaches.length < 1) ? logosCoach : allCoaches[allCoaches.length - 1])
                     }
                     allCoaches = [...clientsSlider.querySelectorAll(".logos-coach")]
                     moveCoaches(allCoaches, 10000)
@@ -699,7 +667,6 @@ window.onload = function (loadEvent) {
 
                     let intervalId
                     quotesChange()
-                    // clearInterval(intervalId)
 
                     clientsText.addEventListener("mouseenter", () => {
                         clearInterval(intervalId)
@@ -769,19 +736,16 @@ window.onload = function (loadEvent) {
 
                             menuShow = !menuShow
                         }
-                        // console.log(headerMenu.getBoundingClientRect().height)
                         distsanceToAnimatedElemArray.forEach(data => {
                             if (zoneBottomBorder > data[1]) {
                                 removeAnim(data[0])
                                 distsanceToAnimatedElemArray.splice(distsanceToAnimatedElemArray.indexOf(data), 1)
                                 if (data[0].classList.contains("client-logo") && !data[0].parentElement.classList.contains("scroll-run")) {
-                                    // console.log(data[0])
                                     data[0].parentElement.classList.add("scroll-run")
                                     infinitySlider()
                                 }
                             }
                         })
-                        // headerMenu
                     }
                 })
 
