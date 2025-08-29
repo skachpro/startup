@@ -1,5 +1,6 @@
 window.onload = function (loadEvent) {
     let body = document.body,
+        headerMenu = document.querySelector(".header-menu"),
         burgerBtn = document.querySelector(".burger-btn"),
         nav = document.querySelector(".header-nav"),
         aboutUsScroll = document.querySelector(".about-us-scroll"),
@@ -63,7 +64,7 @@ window.onload = function (loadEvent) {
                 span.draggable = "true"
                 span.dataset.num = arr[i]
                 span.textContent = arr[i]
-
+                zone.innerHTML = ""
                 zone.append(span)
             })
 
@@ -78,30 +79,31 @@ window.onload = function (loadEvent) {
                 let rightArr = [1, 2, 3, 4],
                     rects = [...document.querySelectorAll(".box-num")],
                     correct = true
-
+                console.log(document.querySelectorAll(".box-num"), "усі box num")
+                console.log(rects, "Box Num")
 
                 rects.forEach((rect, i) => {
                     if (+rect.dataset.num !== rightArr[i]) {
                         correct = false
-                        return
                     }
                 })
 
                 if (correct) {
                     alert("You are the Human")
-                    localStorage.setItem("isLoged", "true")
-                    captcha.classList.add("dn")
-                    body.classList.remove("oh")
+                    // localStorage.setItem("isLoged", "true")
                 } else {
                     alert("Incorrect")
-                    localStorage.setItem("isLoged", "false")
+                    // localStorage.setItem("isLoged", "false")
                 }
-
+                answerBtn.classList.add("answer-disabled")
+                captcha.classList.add("dn")
+                body.classList.remove("oh")
             })
 
             function captchaFunc(captcha, dropZones, answerBtn) {
                 let rects = [...document.querySelectorAll(".box-num")],
                     movedItem
+                console.log(document.querySelectorAll(".box-num"), "усі box num")
                 body.classList.add("oh")
                 captcha.classList.remove("dn")
 
@@ -116,68 +118,67 @@ window.onload = function (loadEvent) {
 
                     rect.addEventListener("touchstart", (e) => {
                         movedItem = rect
+                        movedItem.classList.add("z1")
                         startCord = {
                             top: Math.abs(e.touches[0].pageY - rect.getBoundingClientRect().top),
                             left: Math.abs(e.touches[0].pageX - rect.getBoundingClientRect().left)
                         }
-                        rect.addEventListener("touchmove", (touchMoveEvent) => {
-                            console.log(touchMoveEvent)
-                            rect.style.width = getComputedStyle(rect).width
-                            rect.style.height = getComputedStyle(rect).height
-                            rect.parentElement.style.position = "static"
-                            moveHandler(touchMoveEvent)
-                        })
-
-                        function moveHandler(event) {
-                            move(rect, startCord, event)
-                        }
-                        function move(rect, startCord, event) {
-                            rect.style.transform = "none"
-                            rect.style.top = `${event.touches[0].pageY - startCord.top}px`
-                            rect.style.left = `${event.touches[0].pageX - startCord.left}px`
-                        }
-
-                        rect.addEventListener("touchend", touchEndEvent => {
-                            dropZones.forEach(zone => {
-                                let rectPos = rect.getBoundingClientRect(),
-                                    zonePos = zone.getBoundingClientRect(),
-                                    rectParent = rect.parentElement
-
-                                if (
-                                    rectPos.left >= zonePos.left &&
-                                    rectPos.right <= zonePos.right &&
-                                    rectPos.top >= zonePos.top &&
-                                    rectPos.bottom <= zonePos.bottom
-                                ) {
-                                    zone.style.position = "relative"
-                                    rect.style.top = "50%"
-                                    rect.style.left = "50%"
-                                    rect.style.transform = `translate(-50%, -50%)`
-                                    if (zone.querySelector(".box-num")) {
-                                        rectParent.style.position = "relative"
-                                        rectParent.append(zone.querySelector(".box-num"))
-                                        if (answerBtn.classList.contains("answer-disabled")) {
-                                            answerBtn.classList.remove("answer-disabled")
-                                        }
-                                    }
-                                    zone.append(rect)
-                                }
-                            })
-                            rect.parentElement.style.position = "relative"
-                            rect.style.top = "50%"
-                            rect.style.left = "50%"
-                            rect.style.transform = `translate(-50%, -50%)`
-                        })
-
+                    })
+                    rect.addEventListener("touchmove", (touchMoveEvent) => {
+                        rect.style.width = getComputedStyle(rect).width
+                        rect.style.height = getComputedStyle(rect).height
+                        rect.parentElement.style.position = "static"
+                        moveHandler(touchMoveEvent)
                     })
 
+                    function moveHandler(event) {
+                        move(movedItem, startCord, event)
+                    }
+                    function move(movedItem, startCord, event) {
+                        movedItem.style.transform = "none"
+                        movedItem.style.top = `${event.touches[0].pageY - startCord.top}px`
+                        movedItem.style.left = `${event.touches[0].pageX - startCord.left}px`
+                    }
+                    rect.addEventListener("touchend", touchEndEvent => {
+                        dropZones.forEach(zone => {
+                            let rectPos = rect.getBoundingClientRect(),
+                                zonePos = zone.getBoundingClientRect(),
+                                rectParent = rect.parentElement
+
+                            if (
+                                rectPos.left >= zonePos.left &&
+                                rectPos.right <= zonePos.right &&
+                                rectPos.top >= zonePos.top &&
+                                rectPos.bottom <= zonePos.bottom
+                            ) {
+                                zone.style.position = "relative"
+                                rect.style.top = "50%"
+                                rect.style.left = "50%"
+                                rect.style.transform = `translate(-50%, -50%)`
+                                if (zone.querySelector(".box-num")) {
+                                    rectParent.style.position = "relative"
+                                    rectParent.append(zone.querySelector(".box-num"))
+                                    if (answerBtn.classList.contains("answer-disabled")) {
+                                        answerBtn.classList.remove("answer-disabled")
+                                    }
+                                }
+                                zone.append(rect)
+                            }
+                        })
+                        rect.parentElement.style.position = "relative"
+                        rect.style.top = "50%"
+                        rect.style.left = "50%"
+                        rect.style.transform = `translate(-50%, -50%)`
+                        movedItem.classList.remove("z1")
+                        movedItem = null
+                    })
                 })
 
                 function dragStart(rect, dragStartEvent) {
                     console.log(rect)
                     setTimeout(() => {
-                        movedItem = dragStartEvent.target
-                        movedItem.classList.add("dn")
+                        movedItem = rect
+                        movedItem.classList.add("dn", "z1")
                     }, 0)
                 }
 
@@ -186,17 +187,21 @@ window.onload = function (loadEvent) {
                 }
 
                 function dropAct(zone, dropEvent) {
-                    if (dropEvent.target.parentElement) {
-                        movedItem.parentElement.append(dropEvent.target)
-                        zone.append(movedItem)
-                        if (answerBtn.classList.contains("answer-disabled")) {
-                            answerBtn.classList.remove("answer-disabled")
+                    dropEvent.preventDefault()
+                    console.log(movedItem, "TEST")
+                    if (movedItem) {
+                        let oldParent = movedItem.parentElement
+                        if (zone.querySelector(".box-num")) {
+                            oldParent.append(zone.querySelector(".box-num"))
                         }
+                        zone.append(movedItem)
+                        answerBtn.classList.remove("answer-disabled")
                     }
                 }
 
                 function dragEnd(rect, dragEndEvent) {
-                    movedItem.classList.remove("dn")
+                    movedItem = null
+                    movedItem.classList.remove("dn", "z1")
                 }
 
             }
@@ -205,6 +210,8 @@ window.onload = function (loadEvent) {
     } else {
         getStartedBtn.classList.add("dn")
     }
+
+
 
     let leftArray = []
     for (let i = 0; i < 4; i++) {
@@ -322,7 +329,9 @@ window.onload = function (loadEvent) {
     scrollImg = document.querySelector(".person")
 
     if (localStorage.formData !== undefined) {
-        document.querySelector("h1").innerText = `Hello ${(JSON.parse(localStorage.formData)[`person-name`]).split(" ")[0]}`
+        if (JSON.parse(localStorage.formData)[`person-name`] && JSON.parse(localStorage.formData)[`person-name`].length > 0) {
+            document.querySelector("h1").innerText = `Hello ${(JSON.parse(localStorage.formData)[`person-name`]).split(" ")[0]}`
+        }
         formData = JSON.parse(localStorage.formData)
         footerFormInputs.forEach((input) => {
             if (formData[input.name] && formData[input.name].length > 0) {
@@ -358,7 +367,7 @@ window.onload = function (loadEvent) {
     })
 
     function parallax(element, event) {
-        element.style.backgroundPosition = `calc(50% + ${(event.clientX * 0.1).toFixed()}px) calc(50% + ${(event.clientY * 0.1).toFixed()}px)`
+        element.style.backgroundPosition = `calc(50% - ${(event.clientX * 0.1).toFixed()}px) calc(50% - ${(event.clientY * 0.1).toFixed()}px)`
     }
 
     fetch("js/products.json")
@@ -471,6 +480,8 @@ window.onload = function (loadEvent) {
                     if (clickCounter >= 3) {
                         servicesItemTitle.forEach((text) => {
                             text.innerText = `Triple click Hack`
+                            text.style.color = "red"
+                            text.style.fontWeight = "bold"
                         })
                         clearInterval(clickinterval)
                         return
@@ -489,14 +500,49 @@ window.onload = function (loadEvent) {
                 let checkCorrectPopup = document.querySelector(".check-form"),
                     checkFormBox = checkCorrectPopup.querySelector(".check-form-box"),
                     formCopy = document.forms.form.cloneNode(true),
-                    formBox = document.createElement("div")
-                formBox.classList.add("form-box")
+                    formBox = document.querySelector(".form-box"),
+                    formFooter = formCopy.querySelector(".form-footer")
                 if (checkFormBox.querySelector("form")) {
-                    formBox.remove()
+                    console.log(formBox)
+                    formBox.innerHTML = ""
                 }
+                formFooter.innerHTML = ""
+                let allowBtn = document.createElement("button"),
+                    dismissBtn = document.createElement("button")
+
+                allowBtn.classList.add("check-from-allow-btn", "check-form-btn")
+                dismissBtn.classList.add("check-from-dismiss-btn", "check-form-btn")
+
+                allowBtn.textContent = "Allow"
+                dismissBtn.textContent = "Dismiss"
+
+                formFooter.append(allowBtn)
+                formFooter.append(dismissBtn)
                 formBox.append(formCopy)
-                checkFormBox.append(formBox)
                 checkCorrectPopup.classList.remove("dn")
+
+                let resultBtns = [...document.querySelectorAll(".check-form-btn")]
+                console.log(resultBtns)
+                resultBtns.forEach(btn => {
+                    btn.addEventListener("click", (eventBtn) => {
+                        eventBtn.preventDefault()
+                        console.log(eventBtn)
+                        if (btn.classList.contains("check-from-dismiss-btn")) {
+                            document.forms.form.reset()
+                        } else if (btn.classList.contains("check-from-allow-btn")) {
+                            let lastImputs = [...document.querySelectorAll(".check-form-box .input")]
+                            lastImputs.forEach((element) => {
+                                if (element.value.length > 0 && element.value.length < 150) {
+                                    formData[element.name] = element.value
+                                }
+                            })
+                            localStorage.setItem("formData", JSON.stringify(formData))
+                        }
+                        btn.closest(".parent").classList.add("dn")
+                        console.log(btn.closest(".parent"))
+                    })
+                })
+
                 // checkFormBox.append(document.forms.form.cloneNode(true))
                 // footerFormInputs.forEach((element) => {
                 //     if (element.value.length > 0 && element.value.length < 150) {
@@ -515,7 +561,7 @@ window.onload = function (loadEvent) {
                     let p = document.createElement("p"),
                         text = btn.closest(".post").querySelector(".text").innerText
                     p.classList.add("text", "post-paragraph")
-                    p.textContent = text
+                    p.textContent = text + text + text
                     document.querySelector(".read-more-content").append(p)
                 })
             })
@@ -581,10 +627,11 @@ window.onload = function (loadEvent) {
             }
 
             function moveCoaches(allCoaches, delay) {
+                let coachWidth = parseInt(getComputedStyle(allCoaches[0]).width)
 
                 allCoaches.forEach((coach, i) => {
                     coach.style.transition = `left ${delay}ms linear`
-                    coach.style.left = `calc(100% * ${i - 1}${i > 0 ? "" : ` - ${logosGap}px`})`
+                    coach.style.left = `${(coachWidth + logosGap) * (i - 1)}px`
                     coach.firstElementChild.offsetLeft //Роблю це для того щоб перерахувати усі позиції для правильного рендера
                 })
                 setTimeout(() => {
@@ -593,7 +640,7 @@ window.onload = function (loadEvent) {
                     allCoaches = [...clientsSlider.querySelectorAll(".logos-coach")]
                     allCoaches.forEach((coach, i) => {
                         coach.style.transition = "0s"
-                        coach.style.left = `calc(100% * ${i}${i > 0 ? " + " + logosGap + "px" : ""})`
+                        coach.style.left = `${(coachWidth + logosGap) * i}px`
                     })
                     infinitySliderAct()
                 }, delay <= 1000 ? 0 : delay - 1000)
@@ -683,8 +730,8 @@ window.onload = function (loadEvent) {
                         if (elementPos.top > window.scrollY) {
                             if (elementPos.top < window.scrollY + window.innerHeight) {
                                 removeAnim(element)
-                                if (element === element.parentElement.lastElementChild) {
-                                    // infinitySlider()
+                                if (element.classList.contains("client-logo") && element === element.parentElement.lastElementChild) {
+                                    infinitySlider()
                                 }
                             } else {
                                 distsanceToAnimatedElemArray.push([element, elementPos.top])
@@ -693,8 +740,32 @@ window.onload = function (loadEvent) {
                             removeAnim(element)
                         }
                     }
+                    let menuShow = false,
+                    header = document.querySelector("header"),
+                    headerMenu = document.querySelector(".header-menu-box")
+
                     window.onscroll = (e) => {
                         let zoneBottomBorder = window.scrollY + window.innerHeight
+                        if (window.scrollY >= window.innerHeight && !menuShow) {
+                            console.log("Показати")
+
+                            headerMenu.classList.add("header-menu-fixed", "anim-top")
+                            header.insertAdjacentElement("beforebegin", headerMenu)
+                            setTimeout(() => {
+                                headerMenu.classList.remove("anim-top")
+                            }, 0)
+                            menuShow = !menuShow
+                        }
+
+                        if (window.scrollY <= window.innerHeight && menuShow) {
+                            console.log("Сховати")
+
+                            headerMenu.classList.remove("header-menu-fixed")
+                            header.insertAdjacentElement("afterbegin", headerMenu)
+
+                            menuShow = !menuShow
+                        }
+                        // console.log(headerMenu.getBoundingClientRect().height)
                         distsanceToAnimatedElemArray.forEach(data => {
                             if (zoneBottomBorder > data[1]) {
                                 removeAnim(data[0])
@@ -706,6 +777,7 @@ window.onload = function (loadEvent) {
                                 }
                             }
                         })
+                        // headerMenu
                     }
                 })
 
