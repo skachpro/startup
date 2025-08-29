@@ -276,51 +276,55 @@ window.onload = function (loadEvent) {
     sliderCards = [...document.querySelectorAll(".scroll-card")]
     scrollBtn.forEach((btn) => {
         btn.addEventListener("click", () => {
-            let newCard
-            sliderCards.forEach(card => {
-                if (btn.classList.contains("scroll-btn-right")) {
-                    let newLeft = +card.dataset.left - 263 - gap,
-                        oldLeft = card.dataset.left
-                    if (card.dataset.left < 0) {
-                        card.style.left = card.dataset.left + "px"
-                        card.dataset.left = card.dataset.left
-                    } else {
-                        card.style.left = newLeft + "px"
-                        card.dataset.left = newLeft
+            let newCard, newLeft
+            if (btn.classList.contains("scroll-btn-right")) {
+                sliderCards.forEach(card => {
+                    newLeft = +card.dataset.left - 263 - gap
+                    let oldLeft = +card.dataset.left
+                    // if (card.dataset.left < 0) {
+                    //     card.style.left = card.dataset.left + "px"
+                    //     card.dataset.left = card.dataset.left
+                    // } else {
+                    // }
+                    card.style.left = newLeft + "px"
+                    card.dataset.left = newLeft
+                })
+                newCard = sliderCards[2].cloneNode(true)
+                newLeft = +sliderCards[sliderCards.length - 1].dataset.left + 263 + gap
 
-                    }
-                    if (oldLeft == +leftArray[3] + 263 + gap) {
-                        newCard = sliderCards[2].cloneNode(true)
-                        newLeft = newLeft + 263 + gap
+                newCard.style.left = newLeft + "px"
+                newCard.dataset.left = newLeft
+                aboutUsScroll.append(newCard)
+                sliderCards[0].remove()
+                // if (oldLeft == +leftArray[3] + 263 + gap) {
+                //     newCard = sliderCards[2].cloneNode(true)
+                //     newLeft = newLeft + 263 + gap
 
-                        newCard.style.left = newLeft + "px"
-                        newCard.dataset.left = newLeft
-                        aboutUsScroll.append(newCard)
-                    }
+                //     newCard.style.left = newLeft + "px"
+                //     newCard.dataset.left = newLeft
+                //     aboutUsScroll.append(newCard)
+                // }
 
-                    sliderCards[0].remove()
+
+            } else {
+                sliderCards.forEach(card => {
+                    newLeft = +card.dataset.left + 263 + gap
+                    card.style.left = newLeft + "px"
+                    card.dataset.left = newLeft
+                })
+                let interestedCard = sliderCards[sliderCards.length - 3], newCardLeft
+                newCard = interestedCard.cloneNode(true)
+                if (+sliderCards[0].dataset.left >= 0) {
+                    newCardLeft = 0 - 263 - gap
                 } else {
-                    let newLeft = +card.dataset.left + 263 + gap
-                    if (card.dataset.left > sliderWidth) {
-                        card.style.left = card.dataset.left + "px"
-                        card.dataset.left = card.dataset.left
-                    } else {
-                        card.style.left = newLeft + "px"
-                        card.dataset.left = newLeft
-                    }
-                    if (sliderCards[0] == card && card.dataset.left == 0) {
-                        // console.log(1)
-                        let interestedCard = sliderCards[sliderCards.length - 3]
-                        newCard = interestedCard.cloneNode(true)
-                        let newLeft = 0 - 263 - gap
-                        newCard.style.left = newLeft + "px"
-                        newCard.dataset.left = newLeft
-                        aboutUsScroll.insertAdjacentElement("afterbegin", newCard)
-                        sliderCards[sliderCards.length - 1].remove()
-                    }
+                    newCardLeft = +sliderCards[0].dataset.left - 263 - gap
                 }
-            })
+                newCard.style.left = newCardLeft + "px"
+                newCard.dataset.left = newCardLeft
+                aboutUsScroll.insertAdjacentElement("afterbegin", newCard)
+                sliderCards[sliderCards.length - 1].remove()
 
+            }
             sliderCards = [...document.querySelectorAll(".scroll-card")]
         })
     })
@@ -741,8 +745,8 @@ window.onload = function (loadEvent) {
                         }
                     }
                     let menuShow = false,
-                    header = document.querySelector("header"),
-                    headerMenu = document.querySelector(".header-menu-box")
+                        header = document.querySelector("header"),
+                        headerMenu = document.querySelector(".header-menu-box")
 
                     window.onscroll = (e) => {
                         let zoneBottomBorder = window.scrollY + window.innerHeight
