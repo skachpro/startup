@@ -200,8 +200,8 @@ window.onload = function (loadEvent) {
                 }
 
                 function dragEnd(rect, dragEndEvent) {
-                    movedItem = null
                     movedItem.classList.remove("dn", "z1")
+                    movedItem = null
                 }
 
             }
